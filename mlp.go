@@ -3,6 +3,7 @@ package main
 import (
 	"math"
 
+	"github.com/Rohan-cp/gonn/customMat"
 	"gonum.org/v1/gonum/mat"
 	"gonum.org/v1/gonum/stat/distuv"
 )
@@ -40,4 +41,18 @@ func randomArray(size int, v float64) (data []float64) {
 		data[i] = dist.Rand()
 	}
 	return
+}
+
+func (net Network) Predict(inputData []float64) float64 {
+	// feedforward
+	inputs := mat.NewDense(len(inputData), 1, inputData)
+	hiddenInputs := dot(net.hiddenWeights, inputs)
+	hiddenOutputs := apply(sigmoid, hiddenInputs)
+	finalInputs := dot(net.outputWeights, hiddenOutputs)
+	finalOutputs := apply(sigmoid, finalInputs)
+	return finalOutputs
+}
+
+func sigmoid(r, c int, z float64) float64 {
+	return 1.0 / (1 + math.Exp(-1*z))
 }
