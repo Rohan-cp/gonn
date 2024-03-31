@@ -3,7 +3,6 @@ package main
 import (
 	"math"
 
-	"github.com/Rohan-cp/gonn/customMat"
 	"gonum.org/v1/gonum/mat"
 	"gonum.org/v1/gonum/stat/distuv"
 )
@@ -43,7 +42,7 @@ func randomArray(size int, v float64) (data []float64) {
 	return
 }
 
-func (net Network) Predict(inputData []float64) float64 {
+func (net Network) Predict(inputData []float64) mat.Matrix {
 	// feedforward
 	inputs := mat.NewDense(len(inputData), 1, inputData)
 	hiddenInputs := dot(net.hiddenWeights, inputs)
@@ -55,4 +54,59 @@ func (net Network) Predict(inputData []float64) float64 {
 
 func sigmoid(r, c int, z float64) float64 {
 	return 1.0 / (1 + math.Exp(-1*z))
+}
+
+// Helper functions of easier use of Gonum
+
+func dot(m, n mat.Matrix) mat.Matrix {
+	r, _ := m.Dims()
+	_, c := n.Dims()
+	o := mat.NewDense(r, c, nil)
+	o.Product(m, n)
+	return o
+}
+
+func apply(fn func(i, j int, v float64) float64, m mat.Matrix) mat.Matrix {
+	r, c := m.Dims()
+	o := mat.NewDense(r, c, nil)
+	o.Apply(fn, m)
+	return o
+}
+
+func scale(s float64, m mat.Matrix) mat.Matrix {
+	r, c := m.Dims()
+	o := mat.NewDense(r, c, nil)
+	o.Scale(s, m)
+	return o
+}
+
+func multiply(m, n mat.Matrix) mat.Matrix {
+	r, c := m.Dims()
+	o := mat.NewDense(r, c, nil)
+	o.MulElem(m, n)
+	return o
+}
+
+func add(m, n mat.Matrix) mat.Matrix {
+	r, c := m.Dims()
+	o := mat.NewDense(r, c, nil)
+	o.Add(m, n)
+	return o
+}
+
+func subtract(m, n mat.Matrix) mat.Matrix {
+	r, c := m.Dims()
+	o := mat.NewDense(r, c, nil)
+	o.Sub(m, n)
+	return o
+}
+
+func addScalar(i float64, m mat.Matrix) mat.Matrix {
+	r, c := m.Dims()
+	a := make([]float64, r*c)
+	for x := 0; x < r*c; x++ {
+		a[x] = i
+	}
+	n := mat.NewDense(r, c, a)
+	return add(m, n)
 }

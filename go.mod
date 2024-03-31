@@ -1,6 +1,8 @@
-module main
+module github.com/Rohan-cp/gonn
 
 go 1.20
+
+require gonum.org/v1/gonum v0.15.0
 
 require (
 	git.sr.ht/~sbinet/gg v0.5.0 // indirect
@@ -17,6 +19,5 @@ require (
 	golang.org/x/mod v0.16.0 // indirect
 	golang.org/x/text v0.14.0 // indirect
 	golang.org/x/tools v0.19.0 // indirect
-	gonum.org/v1/gonum v0.15.0 // indirect
 	gonum.org/v1/plot v0.14.0 // indirect
 )
